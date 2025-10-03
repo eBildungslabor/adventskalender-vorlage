@@ -29,8 +29,10 @@
         } else {
             document.getElementById('title').textContent = `🎁 Türchen ${day}`;
             
-            // Markdown-Datei laden
-            fetch(`content/${day.padStart(2, '0')}.md`)
+            // Cache-Busting: Timestamp an URL anhängen
+            const timestamp = new Date().getTime();
+            
+            fetch(`content/${day.padStart(2, '0')}.md?v=${timestamp}`)
                 .then(response => {
                     if (!response.ok) throw new Error('Datei nicht gefunden');
                     return response.text();
