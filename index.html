@@ -5,92 +5,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Adventskalender</title>
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
- <style>
-    :root {
-        --engineering-orange: #bb010b;
-        --fire-engine-red: #cd1624;
-        --dartmouth-green: #006f57;
-        --viridian: #23856d;
-        --seasalt: #faf8f8;
-    }
-    
-    body {
-        background-color: var(--seasalt);
-    }
-    
-    .calendar-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 1rem;
-        max-width: 800px;
-        margin: 2rem auto;
-        padding: 0 1rem;
-    }
-    
-    /* Responsive: 3 Spalten bei mittleren Bildschirmen */
-    @media (max-width: 768px) {
-        .calendar-grid {
-            grid-template-columns: repeat(3, 1fr);
+    <style>
+        :root {
+            --engineering-orange: #bb010b;
+            --fire-engine-red: #cd1624;
+            --dartmouth-green: #006f57;
+            --viridian: #23856d;
+            --seasalt: #faf8f8;
         }
-    }
-    
-    /* Responsive: 2 Spalten bei kleinen Bildschirmen */
-    @media (max-width: 480px) {
-        .calendar-grid {
-            grid-template-columns: repeat(2, 1fr);
+        
+        body {
+            background-color: var(--seasalt);
         }
-    }
-    
-    .door {
-        aspect-ratio: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: var(--fire-engine-red);
-        color: var(--seasalt);
-        font-size: 2rem;
-        font-weight: bold;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: transform 0.2s;
-        border: 3px solid var(--dartmouth-green);
-    }
-    
-    .door:hover {
-        transform: scale(1.05);
-        background: var(--engineering-orange);
-    }
-    
-    .door.locked {
-        background: #888;
-        color: #ddd;
-        border-color: #666;
-        cursor: not-allowed;
-    }
-    
-    .door.open {
-        background: var(--viridian);
-        border-color: var(--dartmouth-green);
-    }
-    
-    @keyframes shake {
-        0%, 100% { transform: translateX(0); }
-        25% { transform: translateX(-10px); }
-        75% { transform: translateX(10px); }
-    }
-    
-    .shake {
-        animation: shake 0.5s;
-    }
-    
-    header h1 {
-        color: var(--dartmouth-green);
-    }
-</style>
+        
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        /* Responsive: 3 Spalten bei mittleren Bildschirmen */
+        @media (max-width: 768px) {
+            .calendar-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        
+        /* Responsive: 2 Spalten bei kleinen Bildschirmen */
+        @media (max-width: 480px) {
+            .calendar-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        .door {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--viridian);
+            color: var(--seasalt);
+            font-size: 2rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 3px solid var(--dartmouth-green);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .door:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .door.locked {
+            background: var(--viridian);
+            color: var(--seasalt);
+            border-color: var(--dartmouth-green);
+            opacity: 0.85;
+        }
+        
+        .door.locked:hover {
+            opacity: 1;
+        }
+        
+        .door.open {
+            background: var(--dartmouth-green);
+            border-color: var(--fire-engine-red);
+            border-width: 4px;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        
+        .shake {
+            animation: shake 0.5s;
+        }
+        
+        header h1 {
+            color: var(--dartmouth-green);
+        }
+    </style>
 </head>
 <body>
     <header>
-        <h1>🎄 Adventskalender 🎄</h1>
+        <h1>🎄 Adventskalender 2024 🎄</h1>
         <p>Klicke auf die Türchen, um sie zu öffnen!</p>
     </header>
 
@@ -99,13 +105,22 @@
     </main>
 
     <script>
-        // Aktuelle Datum (für Tests kannst du das überschreiben)
-        const now = new Date();
-        const currentDay = now.getDate();
-        const currentMonth = now.getMonth() + 1; // Dezember = 12
+        // ⚙️ TEST-MODUS: Setze testMode auf false, um den Kalender in Betrieb zu nehmen
+        const testMode = true;
+        const testDay = 6;    // Welcher Tag soll simuliert werden?
         
-        // Für Tests: Entkommentiere die nächste Zeile und setze ein Testdatum
-       // const currentDay = 24; const currentMonth = 12;
+        // Aktuelles Datum
+        const now = new Date();
+        let currentDay, currentMonth;
+        
+        if (testMode) {
+            currentDay = testDay;
+            currentMonth = 12;
+            console.log(`🧪 TEST-MODUS: Simuliere ${testDay}. Dezember`);
+        } else {
+            currentDay = now.getDate();
+            currentMonth = now.getMonth() + 1;
+        }
 
         const calendar = document.getElementById('calendar');
 
@@ -114,7 +129,7 @@
             door.className = 'door';
             door.textContent = day;
             
-            // Prüfen, ob Türchen geöffnet werden darf
+            // Prüfen, ob Türchen geöffnet werden darf (nur Monat, kein Jahr)
             const canOpen = currentMonth === 12 && currentDay >= day;
             
             if (canOpen) {
