@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adventskalender</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <style>
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 1rem;
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+        .door {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--accent);
+            color: var(--accent-text);
+            font-size: 2rem;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .door:hover {
+            transform: scale(1.05);
+        }
+        .door.locked {
+            background: var(--disabled);
+            cursor: not-allowed;
+        }
+        .door.open {
+            background: var(--accent-hover);
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        .shake {
+            animation: shake 0.5s;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🎄 Adventskalender 🎄</h1>
+        <p>Klicke auf die Türchen, um sie zu öffnen!</p>
+    </header>
+
+    <main>
+        <div class="calendar-grid" id="calendar"></div>
+    </main>
+
+    <script>
+        // Aktuelle Datum (für Tests kannst du das überschreiben)
+        const now = new Date();
+        const currentDay = now.getDate();
+        const currentMonth = now.getMonth() + 1; // Dezember = 12
+        
+        // Für Tests: Entkommentiere die nächste Zeile und setze ein Testdatum
+        // const currentDay = 24; const currentMonth = 12;
+
+        const calendar = document.getElementById('calendar');
+
+        for (let day = 1; day <= 24; day++) {
+            const door = document.createElement('div');
+            door.className = 'door';
+            door.textContent = day;
+            
+            // Prüfen, ob Türchen geöffnet werden darf
+            const canOpen = currentMonth === 12 && currentDay >= day;
+            
+            if (canOpen) {
+                door.classList.add('open');
+                door.addEventListener('click', () => {
+                    window.location.href = `tag.html?day=${day}`;
+                });
+            } else {
+                door.classList.add('locked');
+                door.addEventListener('click', () => {
+                    door.classList.add('shake');
+                    setTimeout(() => door.classList.remove('shake'), 500);
+                });
+            }
+            
+            calendar.appendChild(door);
+        }
+    </script>
+</body>
+</html>
