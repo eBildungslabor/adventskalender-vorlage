@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Türchen</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="index.html">← Zurück zum Kalender</a>
+        </nav>
+        <h1 id="title">Türchen lädt...</h1>
+    </header>
+
+    <main id="content">
+        <p>Inhalt wird geladen...</p>
+    </main>
+
+    <script>
+        // Tag aus URL auslesen
+        const urlParams = new URLSearchParams(window.location.search);
+        const day = urlParams.get('day');
+
+        if (!day || day < 1 || day > 24) {
+            document.getElementById('content').innerHTML = '<p>Ungültiges Türchen!</p>';
+        } else {
+            document.getElementById('title').textContent = `🎁 Türchen ${day}`;
+            
+            // Markdown-Datei laden
+            fetch(`content/${day.padStart(2, '0')}.md`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Datei nicht gefunden');
+                    return response.text();
+                })
+                .then(markdown => {
+                    document.getElementById('content').innerHTML = marked.parse(markdown);
+                })
+                .catch(error => {
+                    document.getElementById('content').innerHTML = 
+                        `<p>⚠️ Inhalt für Türchen ${day} noch nicht vorhanden.</p>`;
+                });
+        }
+    </script>
+</body>
+</html>
